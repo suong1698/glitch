@@ -5,17 +5,38 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require('express');
 const app = express();
-app.set('pug');
+app.set('view engine','pug');
+app.set('views', './views')
 // https://expressjs.com/en/starter/basic-routing.html
-app.get('/', (request, response) => {
-  response.send('I love CodersX');
+var todos= [
+  {id: 0, todo: 'nấu cơm'},
+  {id: 1, todo: 'giặt đồ '},
+  {id: 2, todo: 'học bài'},
+  {id: 3, todo: 'làm bài tập'},
+  {id: 4, todo: 'nấu canh'},
+];
+
+app.get('/', (req, res) => {
+  res.render('index',{
+    name: 'Suong'
+  });
 });
 
-app.get('/todos', (request, response) => {
-  response.send("<ul> Công việc cần làm <li> Đi chợ </li> <li>Nấu cơm </li><li> Rửa bát</li><li> Học tại CodersX </li></ul>");
+app.get('/todos', (req, res) => {
+  res.render('todos/index', {
+    todos: todos 
+  });
+});
+app.get('/todos/search', (req,res)=>{
+  var q = req.query.q;
+  var  matchedTodos= todos.filter((todo)=>{
+    return todo.todo.indexOf(q) !== -1;
+  });
+  res.render('todos/index',{
+    todos: matchedTodos
+  });
 });
 // listen for requests :)
 app.listen(process.env.PORT, () => {
   console.log("Server listening on port " + process.env.PORT);
 });
-//abc
